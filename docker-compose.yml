@@ -16,7 +16,7 @@ services:
     networks:
       - myAppNetwork
     volumes:
-      - /var/www/HackerNews/webvolume/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+      - /data/HackerNews/webvolume/postgresql:/var/lib/postgresql/data   
     deploy:
       restart_policy:
         condition: on-failure
@@ -24,9 +24,11 @@ services:
 
   appaspapi:
     container_name: api_hn
-    build:
-      context: ./hackernewsApi
-      dockerfile: Dockerfile
+
+    image: ihorsamolich/newsserver
+    # build:
+    #   context: ./hackernewsApi
+    #   dockerfile: Dockerfile
     ports:
       - "5018:8080"
     networks:
@@ -34,7 +36,7 @@ services:
     depends_on:
       - sqlPostgresDb
     volumes:
-      - /var/www/HackerNews/webvolume/images:/app/images  # Use the volume name appvol here
+      - /data/HackerNews/webvolume/images:/app/images  # Use the volume name appvol here
     deploy:
       restart_policy:
         condition: on-failure
@@ -42,15 +44,17 @@ services:
 
   clientnextjs:
     container_name: client_hn
-    build:
-      context: ./hackernewsClient
-      dockerfile: Dockerfile
+
+    image: ihorsamolich/newsclient
+    # build:
+    #   context: ./hackernewsClient
+    #   dockerfile: Dockerfile
     ports:
       - "3000:3000" 
     depends_on:
       - appaspapi
     volumes:
-      - /var/www/HackerNews/webvolume/client:/app/client
+      - /data/HackerNews/webvolume/client:/app/client
     networks:
       - myAppNetwork
     deploy:
